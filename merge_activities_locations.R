@@ -1,7 +1,6 @@
 library(readr)
 library(dplyr)
 library(this.path)
-library(sf)
 
 # Read activities
 setwd(this.dir())
@@ -16,11 +15,13 @@ df_locations <- read.csv('locations.csv')
 
 df_activities_merged <- left_join(df_activities, df_locations, by='lid')
 
-df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$PC6 <- 000000
-df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$PC4 <- 0000
-df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$longitude <- 0000
-df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$latitude <- 0000
-df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$type <- 'NA'
+df_activities_merged[df_activities_merged$lid == 'outside DHZW',]$lid <- 'outside_DHZW'
+df_activities_merged[df_activities_merged$lid == 'outside_DHZW',]$PC6 <- 'NA'
+df_activities_merged[df_activities_merged$lid == 'outside_DHZW',]$PC4 <- 'NA'
+df_activities_merged[df_activities_merged$lid == 'outside_DHZW',]$longitude <- 0.0
+df_activities_merged[df_activities_merged$lid == 'outside_DHZW',]$latitude <- 0.0
+
+df_activities_merged <- subset(df_activities_merged, select=-c(type))
 
 # 1 day
 df_activities_merged <- df_activities_merged[df_activities_merged$day_of_week==1,]
